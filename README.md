@@ -27,5 +27,20 @@ Acesso Inicial (O aluno abre o site da biblioteca) → Identificação (Login) (
 
 A Conclusão (Ele fecha o livro, e o sistema registra: "Este usuário gosta desse estilo", alimentando o próximo ciclo).
 
+O Porque escolhemos a tecnologia solana
+Se alguém perguntar "por que complicar com tecnologia de cripto?", a resposta é baseada em três pilares:
+
+Transparência Total: Todos podem ver quantos livros a escola tem e quais são os mais lidos, sem chance de manipulação de dados.
+
+Segurança de Dados: O banco de dados da escola pode dar problema, mas o que está na Solana é permanente. Os registros de leitura dos alunos estão protegidos pela mesma tecnologia que protege moedas digitais.
+
+Incentivo (Gamificação): Você pode criar um sistema onde o aluno ganha um "ponto" (token) na Solana por cada livro lido. Esses pontos podem virar prêmios na escola ou apenas um ranking de "Super Leitores".
+
+
+
+
+
+
+
 Link de um esboço do projeto:https://script.google.com/macros/s/AKfycbzZfvktRGej3WFRGLM1FoBVJfiO4xkgC5wt1Gry6icsL5HO3sQGv8HiEwbDpKoz9Vq_/exec
 

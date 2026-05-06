@@ -194,6 +194,7 @@ Nossa escolha por blockchain Solana é fundamentada em três pilares estratégic
 ## 📞 Contato e Contribuição
 
 Para contribuir ou obter mais informações sobre o projeto, entre em contato com a equipe de desenvolvimento.
+
 ayssertaborda4@gmail.com    vandinhoesv56@gmail.com   lucasgusbatera@gmail.com
 
 

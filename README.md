@@ -27,6 +27,5 @@ Acesso Inicial (O aluno abre o site da biblioteca) → Identificação (Login) (
 
 A Conclusão (Ele fecha o livro, e o sistema registra: "Este usuário gosta desse estilo", alimentando o próximo ciclo).
 
-Link de um esboço do projeto
-https://script.google.com/macros/s/AKfycbwEv5TER8LcLSOBKy1DlPQfEVgNq3dRQ6SsAsns0Tq-MEDWM1yri0_CqYgCvJyCiDYk/exec
+Link de um esboço do projeto:https://script.google.com/macros/s/AKfycbzZfvktRGej3WFRGLM1FoBVJfiO4xkgC5wt1Gry6icsL5HO3sQGv8HiEwbDpKoz9Vq_/exec
 

@@ -1,6 +1,15 @@
 # Biblioteca-Digital-GJL
 Projeto para digitalizar a Biblioteca da Escola Estadual Geraldo Jardim Linhares
 
+Bastidores
+Lidando com a Bagunça de Dados (O desafio da organização)
+No início, os dados dos livros podem estar incompletos ou em formatos diferentes. O "bastidor" aqui é a sua luta para padronizar tudo.
+
+Identificação do Caos (Livros sem autor ou nomes errados) → Criação de Regras (Você decide o que é obrigatório preencher) → Construção de Filtros (O código limpa o que o usuário digita) → Harmonia no Sistema (Tudo fica salvo no mesmo padrão para não quebrar o site).h
+
+
+
+
 Fluxo de Digitalização e Cadastro
 Este é o processo de transformar o livro físico em um registro digital no seu banco de dados.
 

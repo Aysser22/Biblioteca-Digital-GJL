@@ -26,3 +26,6 @@ Acesso Inicial (O aluno abre o site da biblioteca) → Identificação (Login) (
  Reconhecimento de Perfil (O sistema carrega o histórico e as preferências desse aluno específico) → O Desejo de Busca (Ele digita o nome de um livro ou filtra por um gênero como "Ficção") → A Curadoria dos Bastidores (O sistema cruza a busca com o que está disponível e o que o aluno gosta) →O Clique Decisivo (O aluno escolhe o livro e abre a versão digital ou reserva o físico) 
 
 A Conclusão (Ele fecha o livro, e o sistema registra: "Este usuário gosta desse estilo", alimentando o próximo ciclo).
+
+Link de um esboço do projeto
+https://script.google.com/macros/s/AKfycbzuFjz3qc9j6OrMOnk3K2fzKRt5eqNFUg7qnZdg38yWbgCCkbNQBk8wULi0CAymOewz/exec

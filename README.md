@@ -79,6 +79,10 @@ npm install
 ### Execução local
 
 ```bash
+cd frontend
+npm install
+cp .env.example .env
+# Atualize VITE_PROGRAM_ID e VITE_MINT_ADDRESS em frontend/.env
 npm run dev
 ```
 
@@ -91,7 +95,12 @@ npm run dev
 
 ### Configurar mint SPL no front-end
 
-Insira o endereço do token SPL no campo de configuração antes de registrar leituras.
+Atualize `frontend/.env` com as variáveis:
+
+- `VITE_PROGRAM_ID` = Program ID do Anchor implantado
+- `VITE_MINT_ADDRESS` = endereço do token SPL de recompensa
+
+Em seguida, use o campo de configuração da UI para ajustar o mint se necessário.
 
 ## OCR Service
 

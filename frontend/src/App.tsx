@@ -6,7 +6,9 @@ import { clusterApiUrl, PublicKey } from "@solana/web3.js";
 import { getAccount, getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { IDL } from "./idl";
 
-const PROGRAM_ID = new PublicKey("Biblibrary11111111111111111111111111111111111");
+const ENV_PROGRAM_ID = import.meta.env.VITE_PROGRAM_ID;
+const ENV_MINT_ADDRESS = import.meta.env.VITE_MINT_ADDRESS;
+const DEFAULT_PROGRAM_ID = "Biblibrary11111111111111111111111111111111111";
 const DEFAULT_MINT = "ReplaceWithYourMintAddressHere";
 
 type UserAccountData = {
@@ -24,6 +26,23 @@ function App() {
     []
   );
 
+  const [userAccount, setUserAccount] = useState<UserAccountData | null>(null);
+  const [tokenBalance, setTokenBalance] = useState("0");
+  const [isbn, setIsbn] = useState("");
+  const [programIdString, setProgramIdString] = useState(ENV_PROGRAM_ID ?? DEFAULT_PROGRAM_ID);
+  const [mintAddress, setMintAddress] = useState(ENV_MINT_ADDRESS ?? DEFAULT_MINT);
+  const [status, setStatus] = useState("Conecte a wallet para carregar o perfil.");
+  const [userPda, setUserPda] = useState<PublicKey | null>(null);
+  const [mintAuthority, setMintAuthority] = useState<PublicKey | null>(null);
+
+  const programPublicKey = useMemo(() => {
+    try {
+      return new PublicKey(programIdString);
+    } catch {
+      return null;
+    }
+  }, [programIdString]);
+
   const provider = useMemo(() => {
     if (!wallet.publicKey || !wallet.signTransaction || !wallet.signAllTransactions) return null;
     return new AnchorProvider(connection, wallet as any, {
@@ -32,17 +51,9 @@ function App() {
   }, [connection, wallet]);
 
   const program = useMemo(() => {
-    if (!provider) return null;
-    return new Program(IDL as any, PROGRAM_ID, provider);
-  }, [provider]);
-
-  const [userAccount, setUserAccount] = useState<UserAccountData | null>(null);
-  const [tokenBalance, setTokenBalance] = useState("0");
-  const [isbn, setIsbn] = useState("");
-  const [mintAddress, setMintAddress] = useState(DEFAULT_MINT);
-  const [status, setStatus] = useState("Conecte a wallet para carregar o perfil.");
-  const [userPda, setUserPda] = useState<PublicKey | null>(null);
-  const [mintAuthority, setMintAuthority] = useState<PublicKey | null>(null);
+    if (!provider || !programPublicKey) return null;
+    return new Program(IDL as any, programPublicKey, provider);
+  }, [provider, programPublicKey]);
 
   useEffect(() => {
     if (!wallet.publicKey) {
@@ -55,13 +66,20 @@ function App() {
     }
 
     (async () => {
+      if (!programPublicKey) {
+        setStatus("Program ID inválido. Atualize a configuração do programa.");
+        setUserPda(null);
+        setMintAuthority(null);
+        return;
+      }
+
       const [pda] = await PublicKey.findProgramAddress(
         [Buffer.from("user_account"), wallet.publicKey!.toBuffer()],
-        PROGRAM_ID
+        programPublicKey
       );
       const [mintPda] = await PublicKey.findProgramAddress(
         [Buffer.from("mint_authority")],
-        PROGRAM_ID
+        programPublicKey
       );
       setUserPda(pda);
       setMintAuthority(mintPda);
@@ -179,6 +197,15 @@ function App() {
 
       <div className="card">
         <h2>Configuração</h2>
+        <label>
+          Program ID:
+          <input
+            type="text"
+            value={programIdString}
+            onChange={(event) => setProgramIdString(event.target.value)}
+            placeholder="Insira o programa Anchor"
+          />
+        </label>
         <label>
           Endereço do Token SPL (READ):
           <input

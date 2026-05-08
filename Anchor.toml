@@ -1,0 +1,12 @@
+[programs.devnet]
+biblioteca_digital_gjl = "Biblibrary11111111111111111111111111111111111"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "devnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "anchor test"

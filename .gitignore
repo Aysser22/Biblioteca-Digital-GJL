@@ -1,0 +1,15 @@
+# Node dependencies
+node_modules/
+frontend/node_modules/
+ocr-service/node_modules/
+
+# Build output
+frontend/dist/
+target/
+
+# System files
+.DS_Store
+
+# Local environment
+.env
+.env.*

@@ -1,68 +1,141 @@
-Para elevar o projeto ao nível de um **dApp (Aplicativo Descentralizado)** na rede Solana, o texto precisa adotar uma linguagem mais técnica e voltada para a Web3, focando em **escalabilidade, custódia de dados e economia de tokens (tokenomics)**.
+# Biblioteca Digital GJL
 
-Aqui está a reescrita do conceito da **Biblioteca Digital GJL**, estruturada como um Whitepaper de um dApp:
+Projeto de dApp em Solana para gamificar a leitura escolar com modelo Read-to-Earn.
 
----
+## Estrutura do repositório
 
-# 📚 dApp Biblioteca Digital GJL: Web3 Literacy Protocol
+- `Anchor.toml` — configuração Anchor para deploy Devnet
+- `programs/biblioteca_digital_gjl/` — programa Anchor em Rust
+- `tests/biblioteca_digital_gjl.ts` — testes Anchor
+- `frontend/` — app React com Solana Wallet Adapter
+- `ocr-service/` — microserviço Node.js com Tesseract OCR
 
-## 1. O Problema (The Pain Point)
+## Deploy do Smart Contract (Devnet)
 
-O sistema educacional enfrenta o "Abismo de Engajamento": o desinteresse pela leitura em um mundo de estímulos digitais centralizados. Bibliotecas tradicionais são silos de informação com dados opacos, registros vulneráveis a manipulações e falta de incentivos tangíveis para o usuário final (o aluno).
+### Requisitos
 
-## 2. A Solução: Um dApp em Solana
+- `solana-cli`
+- `anchor` instalado globalmente
+- carteira Solana configurada
 
-A **Biblioteca Digital GJL** é um dApp construído na rede **Solana**, projetado para descentralizar o acesso à literatura e gamificar o aprendizado através de **Smart Contracts (Rust/Anchor)**.
+### Configurar Devnet
 
-### Por que a arquitetura dApp/Solana?
+```bash
+solana config set --url devnet
+solana config get
+```
 
-* **Proof of Reading (PoR):** Implementação de uma lógica de consenso onde a conclusão de livros gera transações on-chain, validando o progresso do aluno de forma imutável.
-* **High Throughput:** Aproveitamos a alta velocidade da Solana (65k TPS) para garantir que micro-recompensas e atualizações de ranking sejam processadas em milissegundos com taxas próximas de zero.
-* **Data Immutability:** Diferente de bancos de dados SQL comuns, o histórico de leitura e os metadados do acervo são registrados na blockchain, impedindo a perda ou alteração de registros históricos da escola.
+### Verificar carteira
 
----
+```bash
+solana address
+solana balance
+```
 
-## 3. Proposta de Valor (Value Proposition)
+### Build e deploy Anchor
 
-### 3.1 Tokenomics de Incentivo (Read-to-Earn)
+```bash
+anchor build
+anchor deploy --provider.cluster devnet
+```
 
-O dApp introduz o modelo **Read-to-Earn (R2E)**. Cada interação positiva com o acervo gera utilidade:
+> Se o `programId` ainda for um placeholder (`Biblibrary11111111111111111111111111111111111`), atualize `programs/biblioteca_digital_gjl/src/lib.rs` e `Anchor.toml` após o deploy.
 
-* **Utility Tokens:** Pontos de leitura emitidos como tokens SPL que podem ser trocados por benefícios dentro do ecossistema escolar (governança em eventos, acesso a materiais premium).
-* **SBTs (Soulbound Tokens):** Badges e certificados de leitura emitidos como NFTs intransferíveis, compondo a "Identidade Acadêmica On-chain" do aluno.
+### Atualizar `Anchor.toml`
 
-### 3.2 Experiência do Usuário (UX/UI)
+Se você gerar um novo `programId`, edite `Anchor.toml` em:
 
-* **Wallet Integration:** Login simplificado via carteiras (Phantom/Solflare) ou abstração de conta para alunos que ainda não possuem carteiras, garantindo onboarding suave.
-* **OCR & Oracles:** Integração de processamento de imagem para digitalização de acervo físico, enviando os metadados validados para o estado da blockchain.
+```toml
+[programs.devnet]
+biblioteca_digital_gjl = "<SEU_PROGRAM_ID>"
+```
 
----
+E atualize também o `declare_id!("...");` em `programs/biblioteca_digital_gjl/src/lib.rs`.
 
-## 4. Arquitetura Técnica (The Stack)
+## Testes Anchor
 
-| Camada | Tecnologia | Função |
-| --- | --- | --- |
-| **Protocolo** | **Solana (Mainnet/Devnet)** | Camada de liquidação e registro imutável. |
-| **Smart Contracts** | **Rust / Anchor Framework** | Lógica de negócios, distribuição de tokens e regras de ranking. |
-| **Indexing** | **Helius / Digital Ocean** | Consulta rápida de dados on-chain para a interface. |
-| **Frontend** | **React + Solana Wallet Adapter** | Interface descentralizada e interação com o usuário. |
-| **Storage** | **IPFS / Arweave** | Armazenamento descentralizado dos arquivos digitais dos livros. |
+Instale as dependências e execute:
 
----
+```bash
+npm install
+npm test
+```
 
-## 5. Público-Alvo (Network Participants)
+A suíte de testes inclui:
 
-1. **Readers (Alunos):** Agentes ativos que geram valor ao protocolo através do consumo de conteúdo.
-2. **Curators (Professores/Bibliotecários):** Validadores que garantem a qualidade dos dados inseridos no acervo.
-3. **Governance (Direção):** Gestores que utilizam a transparência da blockchain para auditar o impacto educacional.
+- inicialização de `UserAccount`
+- criação de `mint` SPL
+- registro de leitura e mint de tokens
 
----
+## Front-end React
 
-## 6. Missão Final
+### Instalação
 
-Nossa direção é transformar a **Biblioteca Digital GJL** no primeiro **Literacy Protocol** descentralizado de Minas Gerais, onde a educação não é apenas consumida, mas registrada, recompensada e protegida por criptografia de ponta.
+```bash
+cd frontend
+npm install
+```
 
----
+### Execução local
 
-**Resumo da Mudança de Direção:**
-Ao tratar o projeto como um **dApp**, você para de vender apenas "um site de livros" e passa a vender um **Protocolo de Incentivo à Leitura**. Isso atrai mais atenção de parceiros tecnológicos e abre portas para financiamentos voltados à inovação em Web3 e Educação.
+```bash
+npm run dev
+```
+
+### Pontos principais do UI
+
+- `Connect Wallet` com Phantom e Solflare
+- Leitura de perfil `UserAccount` on-chain
+- Display de XP, nível e saldo SPL
+- Formulário para registrar leitura pelo ISBN
+
+### Configurar mint SPL no front-end
+
+Insira o endereço do token SPL no campo de configuração antes de registrar leituras.
+
+## OCR Service
+
+### Instalação
+
+```bash
+cd ocr-service
+npm install
+```
+
+### Execução
+
+```bash
+npm start
+```
+
+### Endpoint
+
+- `POST /extract`
+  - campo `image` no `multipart/form-data`
+  - resposta: `{ title, isbn, rawText }`
+
+## Makefile
+
+Um Makefile foi adicionado para simplificar o fluxo do projeto.
+
+- `make install` — instala dependências root, frontend e OCR
+- `make test` — executa os testes Anchor
+- `make dev` — inicia o frontend React
+- `make build` — builda o frontend
+- `make deploy-devnet` — executa o script `deploy-devnet.sh`
+- `make clean` — remove dependências e build artifacts
+
+## Deploy Devnet
+
+Use o Makefile para buildar e publicar o programa Anchor na Devnet.
+
+```bash
+make deploy-devnet
+```
+
+## Observações importantes
+
+- O smart contract usa `PDA` para derivar `UserAccount` e `mint_authority`.
+- O `register_reading` valida duplicidade de ISBNs.
+- O fluxo de tokenomics aplica um multiplicador de recompensa por nível.
+- Em produção, sempre valide `mint_authority` como PDA e não exponha chaves privadas.

@@ -1,0 +1,15 @@
+[package]
+name = "biblioteca_digital_gjl"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "biblioteca_digital_gjl"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+anchor-lang = "0.27.0"
+anchor-spl = "0.27.0"
+
+[features]
+no-entrypoint = []

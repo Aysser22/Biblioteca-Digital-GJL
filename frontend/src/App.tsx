@@ -63,6 +63,7 @@ const allBooks: Book[] = [
     rating: 4.8,
     pages: 328,
     genre: ["Distopia", "Ficção Científica", "Política"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg",
     publishedYear: 1949,
     language: "Inglês"
   },
@@ -75,6 +76,7 @@ const allBooks: Book[] = [
     rating: 4.7,
     pages: 96,
     genre: ["Infantil", "Filosofia", "Clássico"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780156012195-L.jpg",
     publishedYear: 1943,
     language: "Francês"
   },
@@ -87,6 +89,7 @@ const allBooks: Book[] = [
     rating: 4.6,
     pages: 432,
     genre: ["Romance", "Clássico", "Sociedade"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg",
     publishedYear: 1813,
     language: "Inglês"
   },
@@ -99,6 +102,7 @@ const allBooks: Book[] = [
     rating: 4.5,
     pages: 288,
     genre: ["Romance", "Juvenil", "Drama"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780061120084-L.jpg",
     publishedYear: 2014,
     language: "Inglês"
   },
@@ -111,6 +115,7 @@ const allBooks: Book[] = [
     rating: 4.9,
     pages: 662,
     genre: ["Fantasia", "Aventura", "Épico"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg",
     publishedYear: 2007,
     language: "Inglês"
   },
@@ -123,6 +128,7 @@ const allBooks: Book[] = [
     rating: 4.4,
     pages: 208,
     genre: ["Clássico", "Romance", "Literatura Brasileira"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9788535914849-L.jpg",
     publishedYear: 1899,
     language: "Português"
   },
@@ -135,6 +141,7 @@ const allBooks: Book[] = [
     rating: 4.7,
     pages: 112,
     genre: ["Política", "Sátira", "Clássico"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9788576573348-L.jpg",
     publishedYear: 1945,
     language: "Inglês"
   },
@@ -147,6 +154,7 @@ const allBooks: Book[] = [
     rating: 4.3,
     pages: 208,
     genre: ["Filosofia", "Espiritualidade", "Aventura"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9786555320550-L.jpg",
     publishedYear: 1988,
     language: "Português"
   }
@@ -550,6 +558,19 @@ function App() {
             {filteredBooks.map((book) => (
               <article className="book-card" key={book.id} onClick={() => openBookModal(book)}>
                 <div className="book-cover">
+                  {book.coverUrl ? (
+                    <img
+                      src={book.coverUrl}
+                      alt={`Capa do livro ${book.title}`}
+                      className="book-cover-image"
+                      onError={(e) => {
+                        // Fallback para placeholder se a imagem não carregar
+                        e.currentTarget.style.display = 'none';
+                        const placeholder = e.currentTarget.parentElement!.querySelector('.cover-placeholder') as HTMLElement;
+                        if (placeholder) placeholder.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
                   <div className="cover-placeholder">
                     {book.title.charAt(0)}
                   </div>
@@ -731,6 +752,19 @@ function App() {
 
             <div className="modal-content">
               <div className="modal-book-cover">
+                {selectedBook.coverUrl ? (
+                  <img
+                    src={selectedBook.coverUrl}
+                    alt={`Capa do livro ${selectedBook.title}`}
+                    className="book-cover-image large"
+                    onError={(e) => {
+                      // Fallback para placeholder se a imagem não carregar
+                      e.currentTarget.style.display = 'none';
+                      const placeholder = e.currentTarget.parentElement!.querySelector('.cover-placeholder') as HTMLElement;
+                      if (placeholder) placeholder.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
                 <div className="cover-placeholder large">
                   {selectedBook.title.charAt(0)}
                 </div>

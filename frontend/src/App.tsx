@@ -255,23 +255,56 @@ function App() {
         </div>
       </section>
 
-      <section className="status-grid" id="perfil">
-        <article className="status-card">
-          <h3>XP</h3>
-          <p>{userAccount ? userAccount.xp : 0}</p>
-        </article>
-        <article className="status-card">
-          <h3>Nível</h3>
-          <p>{userAccount ? userAccount.level : 1}</p>
-        </article>
-        <article className="status-card">
-          <h3>Tokens</h3>
-          <p>{tokenBalance}</p>
-        </article>
-        <article className="status-card">
-          <h3>Livros lidos</h3>
-          <p>{userAccount ? userAccount.booksRead.length : 0}</p>
-        </article>
+      <section className="profile-panel" id="perfil">
+        <div className="profile-hero card">
+          <div>
+            <span className="eyebrow">Seu perfil</span>
+            <h2>Dados do leitor</h2>
+            <p>Veja seu progresso, livros registrados e ganhos de token em um só lugar.</p>
+          </div>
+          <div className="profile-actions">
+            <button onClick={loadProfile} disabled={!wallet.connected}>
+              Atualizar Perfil
+            </button>
+            <button onClick={initializeUser} disabled={!wallet.connected}>
+              Criar Perfil
+            </button>
+          </div>
+        </div>
+
+        <div className="status-grid">
+          <article className="status-card">
+            <h3>XP</h3>
+            <p>{userAccount ? userAccount.xp : 0}</p>
+          </article>
+          <article className="status-card">
+            <h3>Nível</h3>
+            <p>{userAccount ? userAccount.level : 1}</p>
+          </article>
+          <article className="status-card">
+            <h3>Tokens</h3>
+            <p>{tokenBalance}</p>
+          </article>
+          <article className="status-card">
+            <h3>Livros lidos</h3>
+            <p>{userAccount ? userAccount.booksRead.length : 0}</p>
+          </article>
+        </div>
+
+        <div className="profile-summary card">
+          <h3>Resumo do perfil</h3>
+          {userAccount ? (
+            <div className="profile-meta">
+              <p><strong>Proprietário:</strong> {userAccount.owner}</p>
+              <p><strong>XP:</strong> {userAccount.xp}</p>
+              <p><strong>Nível:</strong> {userAccount.level}</p>
+              <p><strong>Tokens acumulados:</strong> {userAccount.totalTokens}</p>
+              <p><strong>Livros registrados:</strong> {userAccount.booksRead.length}</p>
+            </div>
+          ) : (
+            <p>Nenhum perfil carregado ainda. Conecte sua wallet e carregue seu perfil.</p>
+          )}
+        </div>
       </section>
 
       <div className="content-grid">

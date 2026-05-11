@@ -3,7 +3,13 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { AnchorProvider, Program, web3 } from "@coral-xyz/anchor";
 import { clusterApiUrl, PublicKey } from "@solana/web3.js";
-import { getAccount, getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountInstruction,
+  getAccount,
+  getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 import { IDL } from "./idl";
 
 const ENV_PROGRAM_ID = import.meta.env.VITE_PROGRAM_ID;
@@ -359,7 +365,7 @@ function App() {
   }, [program, userPda, wallet.publicKey, loadProfile]);
 
   const registerReading = useCallback(async () => {
-    if (!program || !userPda || !wallet.publicKey || !mintAuthority) return;
+    if (!program || !provider || !userPda || !wallet.publicKey || !mintAuthority) return;
     if (!isbn) {
       setStatus("Digite o ISBN antes de registrar a leitura.");
       return;
@@ -374,6 +380,21 @@ function App() {
     try {
       const mintPublicKey = new PublicKey(mintAddress);
       const userAta = await getAssociatedTokenAddress(mintPublicKey, wallet.publicKey);
+
+      const existingAta = await connection.getAccountInfo(userAta);
+      if (!existingAta) {
+        const createAtaTx = new web3.Transaction().add(
+          createAssociatedTokenAccountInstruction(
+            wallet.publicKey,
+            userAta,
+            wallet.publicKey,
+            mintPublicKey,
+            TOKEN_PROGRAM_ID,
+            ASSOCIATED_TOKEN_PROGRAM_ID
+          )
+        );
+        await provider.sendAndConfirm(createAtaTx);
+      }
 
       await program.methods
         .registerReading(isbn)
@@ -393,7 +414,7 @@ function App() {
       console.error(error);
       setStatus("Erro ao registrar leitura. Veja a console para mais detalhes.");
     }
-  }, [program, userPda, wallet.publicKey, isbn, mintAddress, mintAuthority, loadProfile]);
+  }, [program, userPda, wallet.publicKey, isbn, mintAddress, mintAuthority, loadProfile, connection, provider]);
 
   const addToReadingList = useCallback((listId: string, bookId: string) => {
     setReadingLists(prev => prev.map(list =>

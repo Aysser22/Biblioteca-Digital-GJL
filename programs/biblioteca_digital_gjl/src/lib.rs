@@ -45,6 +45,7 @@ pub mod biblioteca_digital_gjl {
         let user_account = &mut ctx.accounts.user_account;
 
         require!(isbn.len() <= MAX_ISBN_LENGTH, ContractError::IsbnTooLong);
+        require!(user_account.books_read.len() < MAX_BOOKS_READ, ContractError::MaxBooksReached);
         require!(!user_account.books_read.contains(&isbn), ContractError::BookAlreadyRead);
 
         // Atualiza o estado do usuário antes de executar o CPI de mint.
@@ -112,7 +113,7 @@ pub struct CreateBook<'info> {
 pub struct RegisterReading<'info> {
     #[account(
         mut,
-        has_one = owner,
+        has_one = user,
         seeds = [b"user_account", user.key().as_ref()],
         bump,
     )]
@@ -166,6 +167,8 @@ pub struct ReadingCompleted {
 pub enum ContractError {
     #[msg("O usuário já registrou a leitura deste livro.")]
     BookAlreadyRead,
+    #[msg("O usuário atingiu o limite de livros registrados.")]
+    MaxBooksReached,
     #[msg("O ISBN excede o tamanho máximo permitido.")]
     IsbnTooLong,
     #[msg("O título excede o tamanho máximo permitido.")]

@@ -66,9 +66,10 @@ export const IDL = {
   ],
   errors: [
     { code: 6000, name: "BookAlreadyRead", msg: "O usuário já registrou a leitura deste livro." },
-    { code: 6001, name: "IsbnTooLong", msg: "O ISBN excede o tamanho máximo permitido." },
-    { code: 6002, name: "TitleTooLong", msg: "O título excede o tamanho máximo permitido." },
-    { code: 6003, name: "IpfsHashTooLong", msg: "O hash IPFS excede o tamanho máximo permitido." },
-    { code: 6004, name: "Overflow", msg: "Arithmetic overflow ao atualizar o estado do usuário." },
+    { code: 6001, name: "MaxBooksReached", msg: "O usuário atingiu o limite de livros registrados." },
+    { code: 6002, name: "IsbnTooLong", msg: "O ISBN excede o tamanho máximo permitido." },
+    { code: 6003, name: "TitleTooLong", msg: "O título excede o tamanho máximo permitido." },
+    { code: 6004, name: "IpfsHashTooLong", msg: "O hash IPFS excede o tamanho máximo permitido." },
+    { code: 6005, name: "Overflow", msg: "Arithmetic overflow ao atualizar o estado do usuário." },
   ],
 };

@@ -2,6 +2,10 @@
 
 Projeto de dApp em Solana para gamificar a leitura escolar com modelo Read-to-Earn.
 
+## Documentacao tecnica
+
+- Consulte a analise completa em `DOCUMENTACAO_TECNICA.md`.
+
 ## Estrutura do repositório
 
 - `Anchor.toml` — configuração Anchor para deploy Devnet

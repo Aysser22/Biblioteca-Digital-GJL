@@ -19,6 +19,34 @@ type UserAccountData = {
   booksRead: string[];
 };
 
+type FeaturedBook = {
+  title: string;
+  author: string;
+  rating: string;
+  tags: string[];
+};
+
+const featuredBooks: FeaturedBook[] = [
+  {
+    title: "1984",
+    author: "George Orwell",
+    rating: "4.8",
+    tags: ["Distopia", "Clássico", "Suspense"],
+  },
+  {
+    title: "O Pequeno Príncipe",
+    author: "Antoine de Saint-Exupéry",
+    rating: "4.7",
+    tags: ["Infantil", "Filosofia", "Poético"],
+  },
+  {
+    title: "Orgulho e Preconceito",
+    author: "Jane Austen",
+    rating: "4.6",
+    tags: ["Romance", "Clássico", "Sociedade"],
+  },
+];
+
 function App() {
   const wallet = useWallet();
   const connection = useMemo(
@@ -84,7 +112,7 @@ function App() {
       setUserPda(pda);
       setMintAuthority(mintPda);
     })();
-  }, [wallet.publicKey]);
+  }, [wallet.publicKey, programPublicKey]);
 
   const loadProfile = useCallback(async () => {
     if (!program || !userPda || !wallet.publicKey) return;
@@ -181,86 +209,172 @@ function App() {
 
   return (
     <div className="app-shell">
-      <header>
-        <h1>Biblioteca Digital GJL</h1>
-        <p>Read-to-Earn na Solana Devnet</p>
+      <header className="site-header">
+        <div>
+          <span className="brand">Biblioteca GJL</span>
+          <p className="brand-subtitle">Clube de leitura gamificado</p>
+        </div>
+        <nav className="top-nav">
+          <a href="#destaques">Destaques</a>
+          <a href="#perfil">Perfil</a>
+          <a href="#leitura">Registrar</a>
+        </nav>
+        <div className="wallet-bar">
+          <WalletMultiButton />
+        </div>
       </header>
 
-      <div className="wallet-bar">
-        <WalletMultiButton />
-      </div>
+      <section className="hero-panel">
+        <div className="hero-copy">
+          <span className="eyebrow">Inspirado em sites famosos de leitura</span>
+          <h1>Descubra, leia e ganhe prêmios com cada livro.</h1>
+          <p>
+            Um frontend inspirado em Goodreads e bibliotecas modernas, com um visual limpo e foco em suas leituras.
+          </p>
+          <div className="hero-actions">
+            <button onClick={loadProfile} disabled={!wallet.connected}>
+              Ver meu perfil
+            </button>
+            <button className="secondary" onClick={initializeUser} disabled={!wallet.connected}>
+              Criar perfil
+            </button>
+          </div>
+        </div>
 
-      <div className="card">
-        <h2>Status</h2>
-        <p>{status}</p>
-      </div>
-
-      <div className="card">
-        <h2>Configuração</h2>
-        <label>
-          Program ID:
-          <input
-            type="text"
-            value={programIdString}
-            onChange={(event) => setProgramIdString(event.target.value)}
-            placeholder="Insira o programa Anchor"
-          />
-        </label>
-        <label>
-          Endereço do Token SPL (READ):
-          <input
-            type="text"
-            value={mintAddress}
-            onChange={(event) => setMintAddress(event.target.value)}
-            placeholder="Ex: 8V..."
-          />
-        </label>
-      </div>
-
-      <div className="card grid-two">
-        <div>
-          <h2>Perfil do Aluno</h2>
-          {userAccount ? (
-            <div className="profile-data">
-              <p><strong>XP:</strong> {userAccount.xp}</p>
-              <p><strong>Nível:</strong> {userAccount.level}</p>
-              <p><strong>Tokens acumulados:</strong> {userAccount.totalTokens}</p>
-              <p><strong>Livros lidos:</strong> {userAccount.booksRead.length}</p>
-              <pre>{JSON.stringify(userAccount.booksRead, null, 2)}</pre>
+        <div className="hero-card">
+          <div className="book-highlight">
+            <strong>Livro do mês</strong>
+            <h2>O Pequeno Príncipe</h2>
+            <p>Uma jornada leve e profunda para leitores de todas as idades.</p>
+            <div className="badge-row">
+              <span>4.7</span>
+              <span>Filosofia</span>
+              <span>Clássico</span>
             </div>
-          ) : (
-            <p>Nenhum perfil carregado.</p>
-          )}
+          </div>
         </div>
+      </section>
 
-        <div>
-          <h2>Saldo de Tokens</h2>
+      <section className="status-grid" id="perfil">
+        <article className="status-card">
+          <h3>XP</h3>
+          <p>{userAccount ? userAccount.xp : 0}</p>
+        </article>
+        <article className="status-card">
+          <h3>Nível</h3>
+          <p>{userAccount ? userAccount.level : 1}</p>
+        </article>
+        <article className="status-card">
+          <h3>Tokens</h3>
           <p>{tokenBalance}</p>
-        </div>
-      </div>
+        </article>
+        <article className="status-card">
+          <h3>Livros lidos</h3>
+          <p>{userAccount ? userAccount.booksRead.length : 0}</p>
+        </article>
+      </section>
 
-      <div className="card">
-        <h2>Ação de Leitura</h2>
-        <label>
-          ISBN do livro:
-          <input
-            type="text"
-            value={isbn}
-            onChange={(event) => setIsbn(event.target.value)}
-            placeholder="978-..."
-          />
-        </label>
-        <div className="button-row">
-          <button onClick={initializeUser} disabled={!wallet.connected}>
-            Criar Perfil
-          </button>
-          <button onClick={registerReading} disabled={!wallet.connected}>
-            Registrar Leitura
-          </button>
-          <button onClick={loadProfile} disabled={!wallet.connected}>
-            Atualizar Perfil
-          </button>
-        </div>
+      <div className="content-grid">
+        <main>
+          <section className="section-panel" id="destaques">
+            <div className="section-header">
+              <div>
+                <h2>Destaques</h2>
+                <p>Livros selecionados para inspirar sua próxima leitura.</p>
+              </div>
+            </div>
+
+            <div className="book-grid">
+              {featuredBooks.map((book) => (
+                <article className="book-card" key={book.title}>
+                  <div className="cover-placeholder" />
+                  <div className="book-info">
+                    <h3>{book.title}</h3>
+                    <p>{book.author}</p>
+                    <div className="tag-row">
+                      {book.tags.map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="rating">⭐ {book.rating}</div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section-panel" id="leitura">
+            <div className="section-header">
+              <div>
+                <h2>Registrar leitura</h2>
+                <p>Insira o ISBN do livro para atualizar seu progresso.</p>
+              </div>
+            </div>
+
+            <div className="card form-card">
+              <label>
+                ISBN do livro
+                <input
+                  type="text"
+                  value={isbn}
+                  onChange={(event) => setIsbn(event.target.value)}
+                  placeholder="978-..."
+                />
+              </label>
+              <div className="button-row">
+                <button onClick={registerReading} disabled={!wallet.connected}>
+                  Registrar Leitura
+                </button>
+                <button onClick={loadProfile} disabled={!wallet.connected}>
+                  Atualizar Perfil
+                </button>
+              </div>
+              <p className="help-text">Após registrar, seu perfil e saldo serão atualizados.</p>
+            </div>
+          </section>
+        </main>
+
+        <aside className="sidebar-panel">
+          <div className="card sidebar-card">
+            <h2>Configurações</h2>
+            <label>
+              Program ID
+              <input
+                type="text"
+                value={programIdString}
+                onChange={(event) => setProgramIdString(event.target.value)}
+                placeholder="Insira o programa Anchor"
+              />
+            </label>
+            <label>
+              Endereço do Token READ
+              <input
+                type="text"
+                value={mintAddress}
+                onChange={(event) => setMintAddress(event.target.value)}
+                placeholder="Ex: 8V..."
+              />
+            </label>
+          </div>
+
+          <div className="card sidebar-card">
+            <h2>Status</h2>
+            <p>{status}</p>
+          </div>
+
+          <div className="card sidebar-card">
+            <h2>Leituras recentes</h2>
+            {userAccount && userAccount.booksRead.length > 0 ? (
+              <ul className="reading-list">
+                {userAccount.booksRead.slice(-5).map((book, index) => (
+                  <li key={`${book}-${index}`}>{book}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>Nenhum livro registrado ainda.</p>
+            )}
+          </div>
+        </aside>
       </div>
     </div>
   );

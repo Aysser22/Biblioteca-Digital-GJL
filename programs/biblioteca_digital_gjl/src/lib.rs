@@ -113,7 +113,7 @@ pub struct CreateBook<'info> {
 pub struct RegisterReading<'info> {
     #[account(
         mut,
-        has_one = user,
+        constraint = user_account.owner == user.key() @ ContractError::UnauthorizedUser,
         seeds = [b"user_account", user.key().as_ref()],
         bump,
     )]
@@ -169,6 +169,8 @@ pub enum ContractError {
     BookAlreadyRead,
     #[msg("O usuário atingiu o limite de livros registrados.")]
     MaxBooksReached,
+    #[msg("A wallet informada não é dona deste perfil.")]
+    UnauthorizedUser,
     #[msg("O ISBN excede o tamanho máximo permitido.")]
     IsbnTooLong,
     #[msg("O título excede o tamanho máximo permitido.")]

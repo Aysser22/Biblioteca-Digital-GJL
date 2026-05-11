@@ -23,9 +23,6 @@ type UserAccountData = {
   level: number;
   totalTokens: number;
   booksRead: string[];
-  favoriteGenres: string[];
-  readingGoal: number;
-  achievements: string[];
 };
 
 type Book = {
@@ -202,7 +199,7 @@ function App() {
   const [userAchievements, setUserAchievements] = useState<Achievement[]>(achievements);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showBookModal, setShowBookModal] = useState(false);
-  const [readingGoal, setReadingGoal] = useState(12); // books per year
+  const [readingGoal] = useState(12); // books per year
 
   const programPublicKey = useMemo(() => {
     try {
@@ -314,12 +311,8 @@ function App() {
         level: Number(raw.level),
         totalTokens: raw.totalTokens?.toNumber ? raw.totalTokens.toNumber() : Number(raw.totalTokens),
         booksRead: raw.booksRead ?? [],
-        favoriteGenres: raw.favoriteGenres ?? [],
-        readingGoal: raw.readingGoal ?? 12,
-        achievements: raw.achievements ?? []
       };
       setUserAccount(profile);
-      setReadingGoal(profile.readingGoal);
 
       // Check achievements
       checkAchievements(profile.booksRead);

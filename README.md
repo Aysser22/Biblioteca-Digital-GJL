@@ -16,6 +16,26 @@ Projeto de dApp em Solana para gamificar a leitura escolar com modelo Read-to-Ea
 
 ## Deploy do Smart Contract (Devnet)
 
+### Checklist rapido de setup
+
+Antes de rodar testes/build/deploy, valide:
+
+```bash
+node -v
+npm -v
+solana --version
+anchor --version
+```
+
+Se `anchor --version` falhar, instale o Anchor CLI antes de executar `npm test`.
+
+Para o frontend, se `frontend/.env.example` nao existir, crie manualmente `frontend/.env` com:
+
+```bash
+VITE_PROGRAM_ID=<SEU_PROGRAM_ID>
+VITE_MINT_ADDRESS=<SEU_MINT_SPL>
+```
+
 ### Requisitos
 
 - `solana-cli`

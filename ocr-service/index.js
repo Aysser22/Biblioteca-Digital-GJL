@@ -1,19 +1,20 @@
 import express from "express";
 import cors from "cors";
 import multer from "multer";
+import fs from "fs/promises";
 import { createWorker } from "tesseract.js";
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ dest: "uploads/" });
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
 
-const worker = createWorker({ logger: (m) => console.log(m) });
+let worker;
 
 async function initializeWorker() {
-  await worker.load();
+  worker = await createWorker({ logger: (m) => console.log(m) });
   await worker.loadLanguage("eng");
   await worker.initialize("eng");
 }
@@ -39,7 +40,7 @@ app.post("/extract", upload.single("image"), async (req, res) => {
   }
 
   try {
-    const { data } = await worker.recognize(req.file.buffer);
+    const { data } = await worker.recognize(req.file.path);
     const title = extractTitle(data.text);
     const isbn = extractIsbn(data.text);
 
@@ -47,6 +48,8 @@ app.post("/extract", upload.single("image"), async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Falha ao processar a imagem." });
+  } finally {
+    await fs.unlink(req.file.path).catch(() => {});
   }
 });
 

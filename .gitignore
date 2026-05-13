@@ -13,3 +13,4 @@ target/
 # Local environment
 .env
 .env.*
+ocr-service/eng.traineddata

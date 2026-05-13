@@ -37,6 +37,7 @@ type Book = {
   coverUrl?: string;
   publishedYear: number;
   language: string;
+  content?: string; // Trecho do livro para leitura
 };
 
 type ReadingList = {
@@ -68,7 +69,10 @@ const allBooks: Book[] = [
     genre: ["Distopia", "Ficção Científica", "Política"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg",
     publishedYear: 1949,
-    language: "Inglês"
+    language: "Inglês",
+    content: `Era um dia luminoso e frio de abril, e os relógios batiam treze horas. Winston Smith, com o queixo enfiado no peito para escapar do vento cruel, deslizou rapidamente pelas portas de vidro das Mansões Vitória, embora não tão rapidamente para evitar que uma nuvem de poeira de areia entrasse junto com ele.
+
+    O saguão cheirava a repolho cozido e a esteiras velhas. Num canto distante, um pôster colado à parede olhava para baixo com olhos enormes. Era um dos que mostrava simplesmente um rosto enorme, com mais de um metro de largura: o rosto de um homem de uns quarenta e cinco anos, com um bigode preto espesso e feições que retinham uma espécie de nobreza rude. Winston dirigiu-se para as escadas. Era inútil tentar o elevador. Mesmo nos melhores tempos raramente funcionava, e agora a eletricidade era cortada durante o dia. Era parte da campanha de economia no preparo para a Semana do Ódio.`
   },
   {
     id: "2",
@@ -81,7 +85,18 @@ const allBooks: Book[] = [
     genre: ["Infantil", "Filosofia", "Clássico"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780156012195-L.jpg",
     publishedYear: 1943,
-    language: "Francês"
+    language: "Francês",
+    content: `Quando eu tinha seis anos vi uma vez uma imagem magnífica num livro sobre a Floresta Virgem que se chamava "Histórias Vivas". Representava uma serpente jiboia engolindo um animal. Eis a cópia do desenho.
+
+    No livro estava escrito: "As jiboias engolem a presa inteira, sem mastigar. Depois não podem mover-se e dormem durante os seis meses da digestão."
+
+    Pensei muito então nas aventuras da selva e, por minha vez, consegui traçar com um lápis de cor um desenho. Meu desenho número 1. Era assim:
+
+    Mostrei minha obra-prima aos adultos e perguntei-lhes se o meu desenho lhes fazia medo.
+
+    Responderam-me: "Por que um chapéu faria medo a alguém?"
+
+    Meu desenho não representava um chapéu. Representava uma jiboia digerindo um elefante. Desenhei então o interior da jiboia, a fim de que os adultos pudessem compreender. Eles têm sempre necessidade de explicações.`
   },
   {
     id: "3",
@@ -94,7 +109,16 @@ const allBooks: Book[] = [
     genre: ["Romance", "Clássico", "Sociedade"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg",
     publishedYear: 1813,
-    language: "Inglês"
+    language: "Inglês",
+    content: `É uma verdade universalmente conhecida que um homem solteiro, possuidor de uma boa fortuna, deve estar necessitado de uma esposa.
+
+    Por pouco que se conheçam os sentimentos ou as opiniões desse homem a respeito do assunto, essa verdade fica tão bem fixada na mente das famílias vizinhas, que ele é considerado como propriedade legítima de uma ou outra de suas filhas.
+
+    "Meu caro Mr. Bennet", disse certa vez sua esposa, "já ouviu falar que Netherfield Park finalmente foi alugado?"
+
+    Mr. Bennet respondeu que não.
+
+    "Mas foi mesmo", replicou ela, "pois Mrs. Long acabou de me contar. E ela soube por intermédio de Mr. Morris. Segundo Mrs. Long, Netherfield foi alugado por um jovem muito rico do norte da Inglaterra; que chegou na segunda-feira numa carruagem puxada por quatro cavalos para ver a propriedade, e ficou tão encantado com ela que imediatamente concordou com os termos de Mr. Morris; e deve tomar posse antes do dia de São Miguel, e alguns de seus criados já estarão aqui na próxima semana para preparar tudo."`
   },
   {
     id: "4",
@@ -107,7 +131,18 @@ const allBooks: Book[] = [
     genre: ["Romance", "Juvenil", "Drama"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780061120084-L.jpg",
     publishedYear: 2014,
-    language: "Inglês"
+    language: "Inglês",
+    content: `Eu não acredito em amor à primeira vista. Para mim, o amor é como uma planta. Você rega, cuida, e aos poucos ela cresce. Mas Margot, minha irmã mais velha, sempre acreditou em amor à primeira vista. Ela dizia que quando você encontra a pessoa certa, simplesmente sabe.
+
+    Margot tinha dezesseis anos quando conheceu o amor de sua vida. Eu tinha doze. Foi no verão antes dela ir para a faculdade. Ela trabalhava numa sorveteria no centro da cidade, e ele apareceu lá um dia pedindo um sundae de chocolate com calda extra.
+
+    Seu nome era Ravi. Ravi Roshan. Ele tinha dezessete anos, olhos castanhos profundos e um sorriso que fazia você se sentir como se fosse a única pessoa no mundo. Margot me contou tudo sobre ele naquela noite, deitada na minha cama, sussurrando para não acordar nossos pais.
+
+    "Lara Jean, ele é perfeito", ela disse. "Ele gosta de livros antigos e de filmes em preto e branco. E ele toca violão. Ele me escreveu uma música!"
+
+    Eu rolei os olhos. "Ele provavelmente escreve músicas para todas as garotas."
+
+    Mas Margot apenas sorriu seu sorriso secreto. "Não, Lara Jean. Desta vez é diferente. Eu sinto isso."`
   },
   {
     id: "5",
@@ -120,7 +155,20 @@ const allBooks: Book[] = [
     genre: ["Fantasia", "Aventura", "Épico"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg",
     publishedYear: 2007,
-    language: "Inglês"
+    language: "Inglês",
+    content: `Era noite no Waystone Inn. O vento uivava lá fora, e o fogo crepitava na lareira. Era uma noite perfeita para uma história, e todos os fregueses habituais estavam lá.
+
+    "Conte-nos uma história, Kote", pediu o Cronista, um jovem escriba com olhos brilhantes de curiosidade.
+
+    O homem atrás do balcão, que todos conheciam como Kote, o dono da estalagem, ergueu os olhos de seu trabalho. Ele era alto e magro, com cabelos ruivos que começavam a ficar grisalhos nas têmporas. Seus olhos eram verdes como jade antigo.
+
+    "Uma história?", ele disse, com um sorriso cansado. "Já faz muito tempo que não conto histórias."
+
+    Mas o Cronista insistiu, e os outros fregueses murmuraram em concordância. Finalmente, Kote suspirou e começou:
+
+    "Muito bem. Mas vocês devem saber que esta não é apenas uma história. É a minha história. O nome do vento é uma coisa poderosa. Quando um vento tem um nome, ele pode ser chamado, controlado, usado como ferramenta ou arma.
+
+    Meu nome é Kvothe. Eu nasci numa trupe de artistas itinerantes chamada Chandrian. Minha mãe era uma bela cantora, meu pai um ator talentoso. Eu tinha uma irmã chamada Netalia, que era ainda mais talentosa que eu."`
   },
   {
     id: "6",
@@ -133,7 +181,16 @@ const allBooks: Book[] = [
     genre: ["Clássico", "Romance", "Literatura Brasileira"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9788535914849-L.jpg",
     publishedYear: 1899,
-    language: "Português"
+    language: "Português",
+    content: `Uma noite destas, vindo da cidade para o Engenho Novo, encontrei num trem da Central um rapaz aqui do bairro, que eu conheço de vista e de chapéu. Cumprimentou-me, sentou-se ao pé de mim, falou da lua e dos ministros, e acabou recitando-me versos. A viagem era curta, e os versos pode ser que não fossem inteiramente maus. Sucedeu, porém, que, como eu estava cansado, fechei os olhos três ou quatro vezes; tanto bastou para que ele interrompesse a leitura e metesse os versos no bolso.
+
+    — Continue, disse eu acordando.
+
+    — Já acabei, murmurou ele.
+
+    — São muito bonitos.
+
+    Vi-lhe fazer um gesto para tirá-los outra vez do bolso, mas não passou do gesto; estava amuado. No dia seguinte entrou a dizer de mim nomes feios, e acabou alcunhando-me Dom Casmurro. Os vizinhos, que não gostam dos meus hábitos reclusos e calados, deram curso à alcunha, que afinal pegou. Nem por isso me zanguei. Contei a anedota aos amigos da cidade, e eles, por graça, chamam-me assim, alguns em bilhetes: "Dom Casmurro, domingo vou jantar com você". — "Vou para Petrópolis, Dom Casmurro; a casa é a mesma da Renânia; vê se deixas essa caverna mais cedo; sao nove horas da noite".`
   },
   {
     id: "7",
@@ -146,7 +203,12 @@ const allBooks: Book[] = [
     genre: ["Política", "Sátira", "Clássico"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9788576573348-L.jpg",
     publishedYear: 1945,
-    language: "Inglês"
+    language: "Inglês",
+    content: `Sr. Jones, da Granja do Solar, tinha trancado os galinheiros para a noite, mas estava bêbado demais para se lembrar de apagar as lanternas. Cambaleando com uma lanterna na mão oscilante de um lado para outro, ele chutou a porta dos fundos da casa, tirou as botas e foi direto para a cama, onde a Sra. Jones já roncava.
+
+    Assim que a luz na casa-grande se apagou, houve um alvoroço e um bater de asas por toda a granja. Durante o dia inteiro havia corrido o rumor de que o Velho Major, o porco premiado, tivera um estranho sonho na noite anterior e desejava comunicá-lo aos outros animais. Fora combinado que se reuniriam no grande celeiro assim que o Sr. Jones estivesse seguramente fora do caminho. O Velho Major (assim era chamado, embora o nome em seu certificado de exposição fosse Willingdon Beauty) era tão respeitado em toda a granja que todos estavam dispostos a perder uma hora de sono para ouvi-lo.
+
+    No topo de uma espécie de plataforma elevada, sob uma lanterna pendurada numa viga, estava o Velho Major, confortavelmente deitado numa cama de palha, com uma caneca de cerveja ao lado. Ele era doze anos de idade e ultimamente ficara bastante gordo, mas ainda era um porco majestoso, sábio, benevolente, com presas ligeiramente curvas. Logo os outros animais começaram a chegar e a se instalar da melhor maneira possível.`
   },
   {
     id: "8",
@@ -159,7 +221,20 @@ const allBooks: Book[] = [
     genre: ["Filosofia", "Espiritualidade", "Aventura"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9786555320550-L.jpg",
     publishedYear: 1988,
-    language: "Português"
+    language: "Português",
+    content: `O menino se chamava Santiago. Era pastor de ovelhas, e gostava de viajar pelo mundo. Aprendera tudo o que sabia com seu pai, que também fora pastor e que lhe ensinara a ler. Seu pai comprara um livro de histórias, e o menino aprendera a ler com ele. Lia o livro todas as noites, e embora não entendesse tudo, sentia que através daquelas histórias podia viajar sem sair do lugar.
+
+    Aos dezesseis anos, Santiago vendeu suas ovelhas e comprou um saco de livros. Leu tudo o que pôde sobre geografia, história e ciências. Mas o que mais gostava eram os livros sobre alquimia. Lia sobre os grandes segredos da transformação dos metais em ouro, e sonhava em encontrar a Pedra Filosofal, que transformaria qualquer metal em ouro.
+
+    Um dia, chegou a uma cidade chamada Tarifa. Era uma cidade portuária, e o menino ficou encantado com os barcos que iam e vinham. Sentou-se num muro e ficou observando o movimento do porto. De repente, uma velha se aproximou dele.
+
+    — Você está lendo o futuro nas linhas da sua mão? — perguntou ela.
+
+    — Não — respondeu o menino. — Estou apenas descansando.
+
+    — Então me deixe ler o futuro na sua mão — disse a velha.
+
+    O menino estendeu a mão, e a velha começou a examinar as linhas.`
   }
 ];
 
@@ -200,6 +275,10 @@ function App() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showBookModal, setShowBookModal] = useState(false);
   const [readingGoal] = useState(12); // books per year
+
+  // Reader state
+  const [showReader, setShowReader] = useState(false);
+  const [readingBook, setReadingBook] = useState<Book | null>(null);
 
   const programPublicKey = useMemo(() => {
     try {
@@ -433,6 +512,16 @@ function App() {
   const closeBookModal = useCallback(() => {
     setShowBookModal(false);
     setSelectedBook(null);
+  }, []);
+
+  const openReader = useCallback((book: Book) => {
+    setReadingBook(book);
+    setShowReader(true);
+  }, []);
+
+  const closeReader = useCallback(() => {
+    setShowReader(false);
+    setReadingBook(null);
   }, []);
 
   const getBookByIsbn = useCallback((isbn: string) => {
@@ -805,6 +894,12 @@ function App() {
 
                 <div className="modal-actions">
                   <button
+                    className="read-now-btn"
+                    onClick={() => openReader(selectedBook)}
+                  >
+                    Ler Agora
+                  </button>
+                  <button
                     className="add-to-list-btn"
                     onClick={() => addToReadingList("want-to-read", selectedBook.id)}
                   >
@@ -823,6 +918,29 @@ function App() {
                     Já Li
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showReader && readingBook && (
+        <div className="modal-overlay" onClick={closeReader}>
+          <div className="reader-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="reader-header">
+              <div className="reader-book-info">
+                <h2>{readingBook.title}</h2>
+                <p className="reader-author">por {readingBook.author}</p>
+              </div>
+              <button className="close-reader" onClick={closeReader}>×</button>
+            </div>
+            <div className="reader-content">
+              <div className="book-text">
+                {readingBook.content ? readingBook.content.split('\n').map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                )) : (
+                  <p>Conteúdo não disponível para este livro.</p>
+                )}
               </div>
             </div>
           </div>

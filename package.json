@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "test": "anchor test"
+    "test": "anchor test",
+    "frontend:dev": "cd frontend && npm run dev -- --host 0.0.0.0",
+    "frontend:build": "cd frontend && npm run build",
+    "frontend:preview": "cd frontend && npm run preview -- --host 0.0.0.0",
+    "site:build": "cd frontend && npm run build && rm -rf ../docs && mkdir -p ../docs && cp -r dist/* ../docs/ && touch ../docs/.nojekyll"
   },
   "devDependencies": {
     "@coral-xyz/anchor": "^0.27.0",

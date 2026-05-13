@@ -25,6 +25,12 @@ type UserAccountData = {
   booksRead: string[];
 };
 
+// Badge type
+type Badge = "novo" | "popular" | "bestseller" | "epub" | "pdf";
+
+// Sort options
+type SortOption = "recentes" | "populares" | "a-z" | "classificacao";
+
 type Book = {
   id: string;
   isbn: string;
@@ -38,6 +44,11 @@ type Book = {
   publishedYear: number;
   language: string;
   content?: string; // Trecho do livro para leitura
+  badges?: Badge[];
+  isNew?: boolean;
+  isPopular?: boolean;
+  formats?: ("PDF" | "E-book" | "Audiobook")[];
+  lastAccessed?: number;
 };
 
 type ReadingList = {
@@ -72,7 +83,11 @@ const allBooks: Book[] = [
     language: "Inglês",
     content: `Era um dia luminoso e frio de abril, e os relógios batiam treze horas. Winston Smith, com o queixo enfiado no peito para escapar do vento cruel, deslizou rapidamente pelas portas de vidro das Mansões Vitória, embora não tão rapidamente para evitar que uma nuvem de poeira de areia entrasse junto com ele.
 
-    O saguão cheirava a repolho cozido e a esteiras velhas. Num canto distante, um pôster colado à parede olhava para baixo com olhos enormes. Era um dos que mostrava simplesmente um rosto enorme, com mais de um metro de largura: o rosto de um homem de uns quarenta e cinco anos, com um bigode preto espesso e feições que retinham uma espécie de nobreza rude. Winston dirigiu-se para as escadas. Era inútil tentar o elevador. Mesmo nos melhores tempos raramente funcionava, e agora a eletricidade era cortada durante o dia. Era parte da campanha de economia no preparo para a Semana do Ódio.`
+    O saguão cheirava a repolho cozido e a esteiras velhas. Num canto distante, um pôster colado à parede olhava para baixo com olhos enormes. Era um dos que mostrava simplesmente um rosto enorme, com mais de um metro de largura: o rosto de um homem de uns quarenta e cinco anos, com um bigode preto espesso e feições que retinham uma espécie de nobreza rude. Winston dirigiu-se para as escadas. Era inútil tentar o elevador. Mesmo nos melhores tempos raramente funcionava, e agora a eletricidade era cortada durante o dia. Era parte da campanha de economia no preparo para a Semana do Ódio.`,
+    badges: ["popular"],
+    isNew: false,
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"]
   },
   {
     id: "2",
@@ -96,7 +111,11 @@ const allBooks: Book[] = [
 
     Responderam-me: "Por que um chapéu faria medo a alguém?"
 
-    Meu desenho não representava um chapéu. Representava uma jiboia digerindo um elefante. Desenhei então o interior da jiboia, a fim de que os adultos pudessem compreender. Eles têm sempre necessidade de explicações.`
+    Meu desenho não representava um chapéu. Representava uma jiboia digerindo um elefante. Desenhei então o interior da jiboia, a fim de que os adultos pudessem compreender. Eles têm sempre necessidade de explicações.`,
+    badges: ["novo", "popular"],
+    isNew: true,
+    isPopular: true,
+    formats: ["PDF", "E-book"]
   },
   {
     id: "3",
@@ -118,7 +137,12 @@ const allBooks: Book[] = [
 
     Mr. Bennet respondeu que não.
 
-    "Mas foi mesmo", replicou ela, "pois Mrs. Long acabou de me contar. E ela soube por intermédio de Mr. Morris. Segundo Mrs. Long, Netherfield foi alugado por um jovem muito rico do norte da Inglaterra; que chegou na segunda-feira numa carruagem puxada por quatro cavalos para ver a propriedade, e ficou tão encantado com ela que imediatamente concordou com os termos de Mr. Morris; e deve tomar posse antes do dia de São Miguel, e alguns de seus criados já estarão aqui na próxima semana para preparar tudo."`
+    "Mas foi mesmo", replicou ela, "pois Mrs. Long acabou de me contar. E ela soube por intermédio de Mr. Morris. Segundo Mrs. Long, Netherfield foi alugado por um jovem muito rico do norte da Inglaterra; que chegou na segunda-feira numa carruagem puxada por quatro cavalos para ver a propriedade, e ficou tão encantado com ela que imediatamente concordou com os termos de Mr. Morris; e deve tomar posse antes do dia de São Miguel, e alguns de seus criados já estarão aqui na próxima semana para preparar tudo.`,
+    badges: ["bestseller"],
+    isNew: false,
+    isPopular: true,
+    formats: ["PDF", "E-book"]
+  },
   },
   {
     id: "4",
@@ -142,7 +166,11 @@ const allBooks: Book[] = [
 
     Eu rolei os olhos. "Ele provavelmente escreve músicas para todas as garotas."
 
-    Mas Margot apenas sorriu seu sorriso secreto. "Não, Lara Jean. Desta vez é diferente. Eu sinto isso."`
+    Mas Margot apenas sorriu seu sorriso secreto. "Não, Lara Jean. Desta vez é diferente. Eu sinto isso."`,
+    badges: ["novo"],
+    isNew: true,
+    isPopular: false,
+    formats: ["E-book"]
   },
   {
     id: "5",
@@ -168,7 +196,11 @@ const allBooks: Book[] = [
 
     "Muito bem. Mas vocês devem saber que esta não é apenas uma história. É a minha história. O nome do vento é uma coisa poderosa. Quando um vento tem um nome, ele pode ser chamado, controlado, usado como ferramenta ou arma.
 
-    Meu nome é Kvothe. Eu nasci numa trupe de artistas itinerantes chamada Chandrian. Minha mãe era uma bela cantora, meu pai um ator talentoso. Eu tinha uma irmã chamada Netalia, que era ainda mais talentosa que eu."`
+    Meu nome é Kvothe. Eu nasci numa trupe de artistas itinerantes chamada Chandrian. Minha mãe era uma bela cantora, meu pai um ator talentoso. Eu tinha uma irmã chamada Netalia, que era ainda mais talentosa que eu.`,
+    badges: ["bestseller", "popular"],
+    isNew: false,
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"]
   },
   {
     id: "6",
@@ -190,7 +222,11 @@ const allBooks: Book[] = [
 
     — São muito bonitos.
 
-    Vi-lhe fazer um gesto para tirá-los outra vez do bolso, mas não passou do gesto; estava amuado. No dia seguinte entrou a dizer de mim nomes feios, e acabou alcunhando-me Dom Casmurro. Os vizinhos, que não gostam dos meus hábitos reclusos e calados, deram curso à alcunha, que afinal pegou. Nem por isso me zanguei. Contei a anedota aos amigos da cidade, e eles, por graça, chamam-me assim, alguns em bilhetes: "Dom Casmurro, domingo vou jantar com você". — "Vou para Petrópolis, Dom Casmurro; a casa é a mesma da Renânia; vê se deixas essa caverna mais cedo; sao nove horas da noite".`
+    Vi-lhe fazer um gesto para tirá-los outra vez do bolso, mas não passou do gesto; estava amuado. No dia seguinte entrou a dizer de mim nomes feios, e acabou alcunhando-me Dom Casmurro. Os vizinhos, que não gostam dos meus hábitos reclusos e calados, deram curso à alcunha, que afinal pegou. Nem por isso me zanguei. Contei a anedota aos amigos da cidade, e eles, por graça, chamam-me assim, alguns em bilhetes: "Dom Casmurro, domingo vou jantar com você". — "Vou para Petrópolis, Dom Casmurro; a casa é a mesma da Renânia; vê se deixas essa caverna mais cedo; sao nove horas da noite".`,
+    badges: [],
+    isNew: false,
+    isPopular: false,
+    formats: ["PDF"]
   },
   {
     id: "7",
@@ -208,7 +244,11 @@ const allBooks: Book[] = [
 
     Assim que a luz na casa-grande se apagou, houve um alvoroço e um bater de asas por toda a granja. Durante o dia inteiro havia corrido o rumor de que o Velho Major, o porco premiado, tivera um estranho sonho na noite anterior e desejava comunicá-lo aos outros animais. Fora combinado que se reuniriam no grande celeiro assim que o Sr. Jones estivesse seguramente fora do caminho. O Velho Major (assim era chamado, embora o nome em seu certificado de exposição fosse Willingdon Beauty) era tão respeitado em toda a granja que todos estavam dispostos a perder uma hora de sono para ouvi-lo.
 
-    No topo de uma espécie de plataforma elevada, sob uma lanterna pendurada numa viga, estava o Velho Major, confortavelmente deitado numa cama de palha, com uma caneca de cerveja ao lado. Ele era doze anos de idade e ultimamente ficara bastante gordo, mas ainda era um porco majestoso, sábio, benevolente, com presas ligeiramente curvas. Logo os outros animais começaram a chegar e a se instalar da melhor maneira possível.`
+    No topo de uma espécie de plataforma elevada, sob uma lanterna pendurada numa viga, estava o Velho Major, confortavelmente deitado numa cama de palha, com uma caneca de cerveja ao lado. Ele era doze anos de idade e ultimamente ficara bastante gordo, mas ainda era um porco majestoso, sábio, benevolente, com presas ligeiramente curvas. Logo os outros animais começaram a chegar e a se instalar da melhor maneira possível.`,
+    badges: ["popular"],
+    isNew: false,
+    isPopular: true,
+    formats: ["PDF", "E-book"]
   },
   {
     id: "8",
@@ -234,7 +274,11 @@ const allBooks: Book[] = [
 
     — Então me deixe ler o futuro na sua mão — disse a velha.
 
-    O menino estendeu a mão, e a velha começou a examinar as linhas.`
+    O menino estendeu a mão, e a velha começou a examinar as linhas.`,
+    badges: ["novo"],
+    isNew: true,
+    isPopular: false,
+    formats: ["E-book", "Audiobook"]
   }
 ];
 
@@ -276,6 +320,21 @@ function App() {
   const [showBookModal, setShowBookModal] = useState(false);
   const [readingGoal] = useState(12); // books per year
 
+  // Theme management
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    const saved = localStorage.getItem("biblioteca-theme");
+    return (saved as "light" | "dark") || "dark";
+  });
+
+  // Advanced search
+  const [selectedLanguage, setSelectedLanguage] = useState("Todos");
+  const [selectedYear, setSelectedYear] = useState("Todos");
+  const [sortBy, setSortBy] = useState<SortOption>("recentes");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Continue reading
+  const [lastAccessedBooks, setLastAccessedBooks] = useState<Book[]>([]);
+
   // Reader state
   const [showReader, setShowReader] = useState(false);
   const [readingBook, setReadingBook] = useState<Book | null>(null);
@@ -307,14 +366,87 @@ function App() {
                            book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            book.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesGenre = selectedGenre === "Todos" || book.genre.includes(selectedGenre);
-      return matchesSearch && matchesGenre;
+      const matchesLanguage = selectedLanguage === "Todos" || book.language === selectedLanguage;
+      const matchesYear = selectedYear === "Todos" || book.publishedYear.toString() === selectedYear;
+      return matchesSearch && matchesGenre && matchesLanguage && matchesYear;
     });
-  }, [searchQuery, selectedGenre]);
+  }, [searchQuery, selectedGenre, selectedLanguage, selectedYear]);
+
+  // Get unique languages
+  const languages = useMemo(() => {
+    const allLanguages = allBooks.map(book => book.language);
+    return ["Todos", ...Array.from(new Set(allLanguages))];
+  }, []);
+
+  // Get years range
+  const years = useMemo(() => {
+    const allYears = allBooks.map(book => book.publishedYear);
+    const sorted = Array.from(new Set(allYears)).sort((a, b) => b - a);
+    return ["Todos", ...sorted.map(y => y.toString())];
+  }, []);
+
+  // Sorting logic
+  const sortedBooks = useMemo(() => {
+    const sorted = [...filteredBooks];
+    switch (sortBy) {
+      case "recentes":
+        return sorted.sort((a, b) => b.publishedYear - a.publishedYear);
+      case "populares":
+        return sorted.sort((a, b) => {
+          const bPopular = b.isPopular ? 1 : 0;
+          const aPopular = a.isPopular ? 1 : 0;
+          return bPopular - aPopular || b.rating - a.rating;
+        });
+      case "a-z":
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case "classificacao":
+        return sorted.sort((a, b) => b.rating - a.rating);
+      default:
+        return sorted;
+    }
+  }, [filteredBooks, sortBy]);
+
+  // Autocomplete suggestions
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    const uniqueTitles = new Set<string>();
+    const uniqueAuthors = new Set<string>();
+
+    allBooks.forEach(book => {
+      if (book.title.toLowerCase().includes(query)) {
+        uniqueTitles.add(book.title);
+      }
+      if (book.author.toLowerCase().includes(query)) {
+        uniqueAuthors.add(book.author);
+      }
+    });
+
+    return [
+      ...Array.from(uniqueTitles).slice(0, 3),
+      ...Array.from(uniqueAuthors).slice(0, 2)
+    ];
+  }, [searchQuery]);
 
   // Get unique genres
   const genres = useMemo(() => {
     const allGenres = allBooks.flatMap(book => book.genre);
     return ["Todos", ...Array.from(new Set(allGenres))];
+  }, []);
+
+  // Apply theme to DOM
+  useEffect(() => {
+    localStorage.setItem("biblioteca-theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  // Load last accessed books
+  useEffect(() => {
+    const sortedByAccess = [...allBooks]
+      .filter(book => book.lastAccessed)
+      .sort((a, b) => (b.lastAccessed || 0) - (a.lastAccessed || 0))
+      .slice(0, 5);
+    setLastAccessedBooks(sortedByAccess);
   }, []);
 
   useEffect(() => {
@@ -507,11 +639,17 @@ function App() {
   const openBookModal = useCallback((book: Book) => {
     setSelectedBook(book);
     setShowBookModal(true);
+    book.lastAccessed = Date.now(); // Register access
   }, []);
 
   const closeBookModal = useCallback(() => {
     setShowBookModal(false);
     setSelectedBook(null);
+  }, []);
+
+  // Toggle theme
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === "dark" ? "light" : "dark");
   }, []);
 
   const openReader = useCallback((book: Book) => {
@@ -568,6 +706,9 @@ function App() {
             Perfil
           </button>
         </nav>
+        <button className="theme-toggle" onClick={toggleTheme} title="Alternar tema">
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
         <div className="wallet-bar">
           <WalletMultiButton />
         </div>
@@ -626,6 +767,37 @@ function App() {
               </div>
             </div>
           </section>
+
+          {lastAccessedBooks.length > 0 && (
+            <section className="continue-reading-section">
+              <h2>Continuar Lendo</h2>
+              <div className="continue-reading-grid">
+                {lastAccessedBooks.map((book) => (
+                  <div key={book.id} className="continue-card" onClick={() => openBookModal(book)}>
+                    <div className="continue-cover">
+                      {book.coverUrl ? (
+                        <img
+                          src={book.coverUrl}
+                          alt={`Capa do livro ${book.title}`}
+                          className="book-cover-image"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const placeholder = e.currentTarget.parentElement!.querySelector('.cover-placeholder') as HTMLElement;
+                            if (placeholder) placeholder.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div className="cover-placeholder">
+                        {book.title.charAt(0)}
+                      </div>
+                    </div>
+                    <h4>{book.title}</h4>
+                    <p className="author">{book.author}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </>
       )}
 
@@ -642,8 +814,29 @@ function App() {
                 type="text"
                 placeholder="Buscar por título, autor ou descrição..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               />
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="suggestions-dropdown">
+                  {suggestions.map((suggestion, idx) => (
+                    <div
+                      key={idx}
+                      className="suggestion-item"
+                      onClick={() => {
+                        setSearchQuery(suggestion);
+                        setShowSuggestions(false);
+                      }}
+                    >
+                      {suggestion}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="genre-filter">
               <select
@@ -657,8 +850,39 @@ function App() {
             </div>
           </div>
 
+          <div className="filters-section">
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="filter-select"
+            >
+              {languages.map(lang => (
+                <option key={lang} value={lang}>{lang}</option>
+              ))}
+            </select>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="filter-select"
+            >
+              {years.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="filter-select"
+            >
+              <option value="recentes">Mais Recentes</option>
+              <option value="populares">Mais Populares</option>
+              <option value="a-z">A - Z</option>
+              <option value="classificacao">Classificação</option>
+            </select>
+          </div>
+
           <div className="book-grid">
-            {filteredBooks.map((book) => (
+            {sortedBooks.map((book) => (
               <article className="book-card" key={book.id} onClick={() => openBookModal(book)}>
                 <div className="book-cover">
                   {book.coverUrl ? (

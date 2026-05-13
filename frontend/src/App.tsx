@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { AnchorProvider, Program, web3 } from "@coral-xyz/anchor";
@@ -25,6 +25,8 @@ type UserAccountData = {
   booksRead: string[];
 };
 
+type Badge = "novo" | "popular" | "bestseller" | "epub" | "pdf";
+
 type Book = {
   id: string;
   isbn: string;
@@ -37,6 +39,11 @@ type Book = {
   coverUrl?: string;
   publishedYear: number;
   language: string;
+  badges?: Badge[];
+  isNew?: boolean;
+  isPopular?: boolean;
+  formats?: ("PDF" | "E-book" | "Audiobook")[];
+  lastAccessed?: number;
 };
 
 type ReadingList = {
@@ -68,7 +75,11 @@ const allBooks: Book[] = [
     genre: ["Distopia", "Ficção Científica", "Política"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg",
     publishedYear: 1949,
-    language: "Inglês"
+    language: "Inglês",
+    badges: ["bestseller", "popular"],
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"],
+    lastAccessed: Date.now() - 86400000 // 1 dia atrás
   },
   {
     id: "2",
@@ -81,7 +92,10 @@ const allBooks: Book[] = [
     genre: ["Infantil", "Filosofia", "Clássico"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780156012195-L.jpg",
     publishedYear: 1943,
-    language: "Francês"
+    language: "Francês",
+    badges: ["popular", "bestseller"],
+    isPopular: true,
+    formats: ["PDF", "E-book"]
   },
   {
     id: "3",
@@ -94,7 +108,9 @@ const allBooks: Book[] = [
     genre: ["Romance", "Clássico", "Sociedade"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg",
     publishedYear: 1813,
-    language: "Inglês"
+    language: "Inglês",
+    formats: ["PDF", "E-book", "Audiobook"],
+    lastAccessed: Date.now() - 259200000 // 3 dias atrás
   },
   {
     id: "4",
@@ -107,7 +123,11 @@ const allBooks: Book[] = [
     genre: ["Romance", "Juvenil", "Drama"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780061120084-L.jpg",
     publishedYear: 2014,
-    language: "Inglês"
+    language: "Inglês",
+    badges: ["novo"],
+    isNew: true,
+    formats: ["E-book"],
+    lastAccessed: Date.now() - 172800000 // 2 dias atrás
   },
   {
     id: "5",
@@ -120,7 +140,11 @@ const allBooks: Book[] = [
     genre: ["Fantasia", "Aventura", "Épico"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg",
     publishedYear: 2007,
-    language: "Inglês"
+    language: "Inglês",
+    badges: ["bestseller", "popular"],
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"],
+    lastAccessed: Date.now() // Agora
   },
   {
     id: "6",
@@ -133,7 +157,8 @@ const allBooks: Book[] = [
     genre: ["Clássico", "Romance", "Literatura Brasileira"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9788535914849-L.jpg",
     publishedYear: 1899,
-    language: "Português"
+    language: "Português",
+    formats: ["PDF", "E-book"]
   },
   {
     id: "7",
@@ -146,7 +171,11 @@ const allBooks: Book[] = [
     genre: ["Política", "Sátira", "Clássico"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9788576573348-L.jpg",
     publishedYear: 1945,
-    language: "Inglês"
+    language: "Inglês",
+    badges: ["popular"],
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"],
+    lastAccessed: Date.now() - 604800000 // 7 dias atrás
   },
   {
     id: "8",
@@ -159,7 +188,118 @@ const allBooks: Book[] = [
     genre: ["Filosofia", "Espiritualidade", "Aventura"],
     coverUrl: "https://covers.openlibrary.org/b/isbn/9786555320550-L.jpg",
     publishedYear: 1988,
-    language: "Português"
+    language: "Português",
+    badges: ["bestseller"],
+    formats: ["PDF", "E-book"],
+    lastAccessed: Date.now() - 1209600000 // 14 dias atrás
+  },
+  {
+    id: "9",
+    isbn: "9780747532743",
+    title: "Harry Potter e a Pedra Filosofal",
+    author: "J.K. Rowling",
+    description: "O início da jornada do jovem bruxo Harry Potter na escola de magia de Hogwarts.",
+    rating: 4.8,
+    pages: 223,
+    genre: ["Fantasia", "Aventura", "Infantil"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780747532743-L.jpg",
+    publishedYear: 1997,
+    language: "Inglês",
+    badges: ["popular", "bestseller"],
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"]
+  },
+  {
+    id: "10",
+    isbn: "9780747538486",
+    title: "Harry Potter e a Câmara Secreta",
+    author: "J.K. Rowling",
+    description: "Harry volta a Hogwarts e descobre uma antiga ameaça escondida dentro dos muros da escola.",
+    rating: 4.7,
+    pages: 251,
+    genre: ["Fantasia", "Aventura", "Mistério"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780747538486-L.jpg",
+    publishedYear: 1998,
+    language: "Inglês",
+    badges: ["popular"],
+    formats: ["PDF", "E-book", "Audiobook"]
+  },
+  {
+    id: "11",
+    isbn: "9780747542155",
+    title: "Harry Potter e o Prisioneiro de Azkaban",
+    author: "J.K. Rowling",
+    description: "Harry enfrenta novos perigos quando um prisioneiro perigoso escapa e parece estar vindo para Hogwarts.",
+    rating: 4.9,
+    pages: 317,
+    genre: ["Fantasia", "Aventura", "Mistério"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780747542155-L.jpg",
+    publishedYear: 1999,
+    language: "Inglês",
+    badges: ["bestseller"],
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"]
+  },
+  {
+    id: "12",
+    isbn: "9780747546245",
+    title: "Harry Potter e o Cálice de Fogo",
+    author: "J.K. Rowling",
+    description: "A competição do Torneio Tribruxo coloca Harry contra desafios perigosos e forças sombrias.",
+    rating: 4.8,
+    pages: 636,
+    genre: ["Fantasia", "Aventura", "Épico"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780747546245-L.jpg",
+    publishedYear: 2000,
+    language: "Inglês",
+    badges: ["popular", "bestseller"],
+    formats: ["PDF", "E-book", "Audiobook"]
+  },
+  {
+    id: "13",
+    isbn: "9780747551003",
+    title: "Harry Potter e a Ordem da Fênix",
+    author: "J.K. Rowling",
+    description: "Harry lidera seus amigos em uma batalha contra o retorno de Voldemort e a corrupção dentro de Hogwarts.",
+    rating: 4.6,
+    pages: 766,
+    genre: ["Fantasia", "Aventura", "Drama"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780747551003-L.jpg",
+    publishedYear: 2003,
+    language: "Inglês",
+    badges: ["popular"],
+    formats: ["PDF", "E-book", "Audiobook"]
+  },
+  {
+    id: "14",
+    isbn: "9780747581086",
+    title: "Harry Potter e o Enigma do Príncipe",
+    author: "J.K. Rowling",
+    description: "Segredos do passado de Voldemort vêm à tona enquanto Harry e Dumbledore procuram por Horcruxes.",
+    rating: 4.7,
+    pages: 652,
+    genre: ["Fantasia", "Aventura", "Mistério"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780747581086-L.jpg",
+    publishedYear: 2005,
+    language: "Inglês",
+    badges: ["popular"],
+    formats: ["PDF", "E-book", "Audiobook"]
+  },
+  {
+    id: "15",
+    isbn: "9780747591054",
+    title: "Harry Potter e as Relíquias da Morte",
+    author: "J.K. Rowling",
+    description: "Harry, Ron e Hermione abandonam Hogwarts para destruir as Horcruxes restantes e derrotar Voldemort.",
+    rating: 4.9,
+    pages: 759,
+    genre: ["Fantasia", "Aventura", "Épico"],
+    coverUrl: "https://covers.openlibrary.org/b/isbn/9780747591054-L.jpg",
+    publishedYear: 2007,
+    language: "Inglês",
+    badges: ["popular", "bestseller"],
+    isPopular: true,
+    formats: ["PDF", "E-book", "Audiobook"]
   }
 ];
 
@@ -170,6 +310,8 @@ const achievements: Achievement[] = [
   { id: "genre-explorer", name: "Explorador de Gêneros", description: "Leia livros de 3 gêneros diferentes", icon: "🗺️", unlocked: false, xpReward: 150 },
   { id: "speed-reader", name: "Leitor Veloz", description: "Leia 3 livros em um mês", icon: "⚡", unlocked: false, xpReward: 120 }
 ];
+
+type SortOption = "recentes" | "populares" | "a-z" | "classificacao";
 
 function App() {
   const wallet = useWallet();
@@ -187,10 +329,20 @@ function App() {
   const [userPda, setUserPda] = useState<PublicKey | null>(null);
   const [mintAuthority, setMintAuthority] = useState<PublicKey | null>(null);
 
+  // Theme state
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    const saved = localStorage.getItem("biblioteca-theme");
+    return (saved as "light" | "dark") || "dark";
+  });
+
   // New state for enhanced features
   const [activeTab, setActiveTab] = useState("home");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("Todos");
+  const [selectedLanguage, setSelectedLanguage] = useState("Todos");
+  const [selectedYear, setSelectedYear] = useState("Todos");
+  const [sortBy, setSortBy] = useState<SortOption>("recentes");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [readingLists, setReadingLists] = useState<ReadingList[]>([
     { id: "want-to-read", name: "Quero Ler", description: "Livros que quero ler", books: [], isPublic: true },
     { id: "currently-reading", name: "Lendo Agora", description: "Livros que estou lendo", books: [], isPublic: true },
@@ -200,6 +352,23 @@ function App() {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showBookModal, setShowBookModal] = useState(false);
   const [readingGoal] = useState(12); // books per year
+  const [lastAccessedBooks, setLastAccessedBooks] = useState<Book[]>([]);
+
+  const hideInvalidCover = (img: HTMLImageElement) => {
+    img.style.display = "none";
+    const placeholder = img.parentElement?.querySelector(".cover-placeholder") as HTMLElement | null;
+    if (placeholder) placeholder.style.display = "flex";
+  };
+
+  const handleCoverError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    hideInvalidCover(e.currentTarget);
+  };
+
+  const handleCoverLoad = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    if (e.currentTarget.naturalWidth <= 1 || e.currentTarget.naturalHeight <= 1) {
+      hideInvalidCover(e.currentTarget);
+    }
+  };
 
   const programPublicKey = useMemo(() => {
     try {
@@ -221,22 +390,89 @@ function App() {
     return new Program(IDL as any, programPublicKey, provider);
   }, [provider, programPublicKey]);
 
-  // Filter books based on search and genre
+  // Apply theme
+  useEffect(() => {
+    localStorage.setItem("biblioteca-theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  // Load last accessed books
+  useEffect(() => {
+    const sortedByAccess = [...allBooks]
+      .filter(book => book.lastAccessed)
+      .sort((a, b) => (b.lastAccessed || 0) - (a.lastAccessed || 0))
+      .slice(0, 5);
+    setLastAccessedBooks(sortedByAccess);
+  }, []);
+
+  // Get unique languages
+  const languages = useMemo(() => {
+    const allLanguages = allBooks.map(book => book.language);
+    return ["Todos", ...Array.from(new Set(allLanguages))];
+  }, []);
+
+  // Get years range
+  const years = useMemo(() => {
+    const allYears = allBooks.map(book => book.publishedYear);
+    const sorted = Array.from(new Set(allYears)).sort((a, b) => b - a);
+    return ["Todos", ...sorted.map(y => y.toString())];
+  }, []);
+
+  // Filter books with advanced options
   const filteredBooks = useMemo(() => {
     return allBooks.filter(book => {
       const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            book.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesGenre = selectedGenre === "Todos" || book.genre.includes(selectedGenre);
-      return matchesSearch && matchesGenre;
+      const matchesLanguage = selectedLanguage === "Todos" || book.language === selectedLanguage;
+      const matchesYear = selectedYear === "Todos" || book.publishedYear.toString() === selectedYear;
+      return matchesSearch && matchesGenre && matchesLanguage && matchesYear;
     });
-  }, [searchQuery, selectedGenre]);
+  }, [searchQuery, selectedGenre, selectedLanguage, selectedYear]);
 
-  // Get unique genres
-  const genres = useMemo(() => {
-    const allGenres = allBooks.flatMap(book => book.genre);
-    return ["Todos", ...Array.from(new Set(allGenres))];
-  }, []);
+  // Sort books
+  const sortedBooks = useMemo(() => {
+    const sorted = [...filteredBooks];
+    switch (sortBy) {
+      case "recentes":
+        return sorted.sort((a, b) => b.publishedYear - a.publishedYear);
+      case "populares":
+        return sorted.sort((a, b) => {
+          const bPopular = b.isPopular ? 1 : 0;
+          const aPopular = a.isPopular ? 1 : 0;
+          return bPopular - aPopular || b.rating - a.rating;
+        });
+      case "a-z":
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case "classificacao":
+        return sorted.sort((a, b) => b.rating - a.rating);
+      default:
+        return sorted;
+    }
+  }, [filteredBooks, sortBy]);
+
+  // Autocomplete suggestions
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    const uniqueTitles = new Set<string>();
+    const uniqueAuthors = new Set<string>();
+
+    allBooks.forEach(book => {
+      if (book.title.toLowerCase().includes(query)) {
+        uniqueTitles.add(book.title);
+      }
+      if (book.author.toLowerCase().includes(query)) {
+        uniqueAuthors.add(book.author);
+      }
+    });
+
+    return [
+      ...Array.from(uniqueTitles).slice(0, 3),
+      ...Array.from(uniqueAuthors).slice(0, 2)
+    ];
+  }, [searchQuery]);
 
   useEffect(() => {
     if (!wallet.publicKey) {
@@ -428,11 +664,17 @@ function App() {
   const openBookModal = useCallback((book: Book) => {
     setSelectedBook(book);
     setShowBookModal(true);
+    // Register access time
+    book.lastAccessed = Date.now();
   }, []);
 
   const closeBookModal = useCallback(() => {
     setShowBookModal(false);
     setSelectedBook(null);
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === "dark" ? "light" : "dark");
   }, []);
 
   const getBookByIsbn = useCallback((isbn: string) => {
@@ -446,8 +688,14 @@ function App() {
     return Math.min((booksThisYear / readingGoal) * 100, 100);
   }, [userAccount, readingGoal]);
 
+  // Get unique genres
+  const genres = useMemo(() => {
+    const allGenres = allBooks.flatMap(book => book.genre);
+    return ["Todos", ...Array.from(new Set(allGenres))];
+  }, []);
+
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-theme={theme}>
       <header className="site-header">
         <div>
           <span className="brand">Biblioteca GJL</span>
@@ -477,6 +725,9 @@ function App() {
             onClick={() => setActiveTab("profile")}
           >
             Perfil
+          </button>
+          <button className="theme-toggle" onClick={toggleTheme} title="Alternar tema">
+            {theme === "dark" ? "☀️" : "🌙"}
           </button>
         </nav>
         <div className="wallet-bar">
@@ -517,6 +768,44 @@ function App() {
             </div>
           </section>
 
+          {/* Continue Reading Section */}
+          {lastAccessedBooks.length > 0 && (
+            <section className="continue-reading-section">
+              <div className="section-header">
+                <h2>📖 Continuar Lendo</h2>
+                <p>Seus últimos livros acessados</p>
+              </div>
+              <div className="continue-reading-grid">
+                {lastAccessedBooks.map((book) => (
+                  <div
+                    key={book.id}
+                    className="continue-card"
+                    onClick={() => openBookModal(book)}
+                  >
+                    <div className="continue-cover">
+                      {book.coverUrl ? (
+                        <img
+                          src={book.coverUrl}
+                          alt={book.title}
+                          onLoad={handleCoverLoad}
+                          onError={handleCoverError}
+                        />
+                      ) : null}
+                      <div className="continue-placeholder">
+                        {book.title.charAt(0)}
+                      </div>
+                    </div>
+                    <div className="continue-info">
+                      <h3>{book.title}</h3>
+                      <p>{book.author}</p>
+                      <span className="rating">⭐ {book.rating}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           <section className="stats-panel">
             <div className="stats-grid">
               <div className="stat-card">
@@ -547,63 +836,152 @@ function App() {
             <p>Descubra novos livros e adicione aos seus favoritos</p>
           </div>
 
-          <div className="search-controls">
+          <div className="search-section">
             <div className="search-bar">
               <input
                 type="text"
-                placeholder="Buscar por título, autor ou descrição..."
+                placeholder="🔍 Buscar por título, autor ou descrição..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               />
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="suggestions-dropdown">
+                  {suggestions.map((suggestion, idx) => (
+                    <div
+                      key={idx}
+                      className="suggestion-item"
+                      onClick={() => {
+                        setSearchQuery(suggestion);
+                        setShowSuggestions(false);
+                      }}
+                    >
+                      {suggestion}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="genre-filter">
+          </div>
+
+          <div className="filters-section">
+            <div className="filter-group">
+              <label>Gênero:</label>
               <select
                 value={selectedGenre}
                 onChange={(e) => setSelectedGenre(e.target.value)}
+                className="filter-select"
               >
                 {genres.map(genre => (
                   <option key={genre} value={genre}>{genre}</option>
                 ))}
               </select>
             </div>
+
+            <div className="filter-group">
+              <label>Idioma:</label>
+              <select
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+                className="filter-select"
+              >
+                {languages.map(lang => (
+                  <option key={lang} value={lang}>{lang}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Ano:</label>
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                className="filter-select"
+              >
+                {years.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Ordenar por:</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="filter-select"
+              >
+                <option value="recentes">Mais Recentes</option>
+                <option value="populares">Mais Populares</option>
+                <option value="a-z">A-Z</option>
+                <option value="classificacao">Classificação</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="results-info">
+            <p>{sortedBooks.length} livro(s) encontrado(s)</p>
           </div>
 
           <div className="book-grid">
-            {filteredBooks.map((book) => (
-              <article className="book-card" key={book.id} onClick={() => openBookModal(book)}>
-                <div className="book-cover">
-                  {book.coverUrl ? (
-                    <img
-                      src={book.coverUrl}
-                      alt={`Capa do livro ${book.title}`}
-                      className="book-cover-image"
-                      onError={(e) => {
-                        // Fallback para placeholder se a imagem não carregar
-                        e.currentTarget.style.display = 'none';
-                        const placeholder = e.currentTarget.parentElement!.querySelector('.cover-placeholder') as HTMLElement;
-                        if (placeholder) placeholder.style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
-                  <div className="cover-placeholder">
-                    {book.title.charAt(0)}
+            {sortedBooks.length > 0 ? (
+              sortedBooks.map((book) => (
+                <article className="book-card" key={book.id} onClick={() => openBookModal(book)}>
+                  <div className="book-card-badge-container">
+                    {book.badges && book.badges.length > 0 && (
+                      <div className="book-badges">
+                        {book.badges.map((badge) => (
+                          <span key={badge} className={`badge badge-${badge}`}>
+                            {badge === "novo" && "🆕 Novo"}
+                            {badge === "popular" && "🔥 Popular"}
+                            {badge === "bestseller" && "⭐ Bestseller"}
+                            {badge === "epub" && "📱 E-book"}
+                            {badge === "pdf" && "📄 PDF"}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
-                <div className="book-info">
-                  <h3>{book.title}</h3>
-                  <p className="author">{book.author}</p>
-                  <div className="book-meta">
-                    <span className="rating">⭐ {book.rating}</span>
-                    <span className="pages">{book.pages} páginas</span>
+                  <div className="book-cover">
+                    {book.coverUrl ? (
+                      <img
+                        src={book.coverUrl}
+                        alt={`Capa do livro ${book.title}`}
+                        className="book-cover-image"
+                        onLoad={handleCoverLoad}
+                        onError={handleCoverError}
+                      />
+                    ) : null}
+                    <div className="cover-placeholder">
+                      {book.title.charAt(0)}
+                    </div>
                   </div>
-                  <div className="genre-tags">
-                    {book.genre.slice(0, 2).map((genre) => (
-                      <span key={genre} className="genre-tag">{genre}</span>
-                    ))}
+                  <div className="book-info">
+                    <h3>{book.title}</h3>
+                    <p className="author">{book.author}</p>
+                    <div className="book-meta">
+                      <span className="rating">⭐ {book.rating}</span>
+                      <span className="pages">{book.pages} pág</span>
+                    </div>
+                    <div className="format-tags">
+                      {book.formats && book.formats.slice(0, 2).map((format) => (
+                        <span key={format} className="format-tag">{format}</span>
+                      ))}
+                    </div>
+                    <div className="genre-tags">
+                      {book.genre.slice(0, 2).map((genre) => (
+                        <span key={genre} className="genre-tag">{genre}</span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))
+            ) : (
+              <div className="no-results">
+                <p>Nenhum livro encontrado com os filtros selecionados.</p>
+              </div>
+            )}
           </div>
         </section>
       )}
@@ -771,12 +1149,8 @@ function App() {
                     src={selectedBook.coverUrl}
                     alt={`Capa do livro ${selectedBook.title}`}
                     className="book-cover-image large"
-                    onError={(e) => {
-                      // Fallback para placeholder se a imagem não carregar
-                      e.currentTarget.style.display = 'none';
-                      const placeholder = e.currentTarget.parentElement!.querySelector('.cover-placeholder') as HTMLElement;
-                      if (placeholder) placeholder.style.display = 'flex';
-                    }}
+                    onLoad={handleCoverLoad}
+                    onError={handleCoverError}
                   />
                 ) : null}
                 <div className="cover-placeholder large">

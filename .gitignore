@@ -12,5 +12,6 @@ target/
 
 # Local environment
 .env
-.env.*
+.env.local
+.env.*.local
 ocr-service/eng.traineddata

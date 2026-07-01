@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 📚 Biblioteca Digital GJL
 
 Bastidores

@@ -1,1 +1,0 @@
-function n(){return"http://localhost:4000"}async function o(e){const a=n(),t=await fetch(`${a}/api/stats?address=${encodeURIComponent(e)}`,{method:"GET",credentials:"include"});if(!t.ok){const s=await t.text().catch(()=>"");throw new Error(s||`Failed to fetch stats: ${t.status}`)}return await t.json()}export{o as fetchStats};

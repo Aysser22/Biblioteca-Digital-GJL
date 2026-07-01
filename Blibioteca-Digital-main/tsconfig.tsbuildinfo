@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/theme.ts","./src/vite-env.d.ts","./src/evm/MetaMaskWallet.ts","./src/lib/statsApi.ts","./src/pages/ExplorePage.tsx","./src/pages/HomePage.tsx","./src/pages/LandingPage.tsx","./src/pages/ProfilePage.tsx","./src/solana/WalletAdapterProvider.tsx"],"version":"5.6.3"}
